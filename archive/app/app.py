@@ -41,8 +41,6 @@ async def upload_file(
     session: AsyncSession = Depends(get_async_session)
 ):
     try:
-        # 1. Direct Upload (Avoids the temp file headache)
-        # file.file is a SpooledTemporaryFile that ImageKit can read directly
         upload_result = imagekit.files.upload(
             file=file.file,
             file_name=file.filename,
@@ -50,8 +48,6 @@ async def upload_file(
             tags=["backend-upload"]
         )
 
-        # 2. If it didn't raise an exception, it worked! 
-        # Access attributes directly from upload_result
         post = Post(
             user_id=uuid.uuid4(),
             caption=caption,
@@ -72,8 +68,6 @@ async def upload_file(
         }
 
     except Exception as e:
-        # This will catch the actual ImageKit error (e.g., auth failure, size limit)
-        # instead of masking it with "status: unknown"
         print(f"DEBUG ERROR: {str(e)}") 
         raise HTTPException(status_code=500, detail=str(e))
     finally:
