@@ -107,7 +107,8 @@ async def get_feed(
 
 
 @app.delete("/posts/{post_id}")
-async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_session), user: User = Depends(current_active_user),):
+async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_session),):
+                      #user: User = Depends(current_active_user)
     try:
         post_uuid = uuid.UUID(post_id)
 
@@ -117,9 +118,10 @@ async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_se
         if not post:
             raise HTTPException(status_code=404, detail="Post not found")
 
-        if post.user_id != user.id:
+        """if post.user_id != user.id:
             raise HTTPException(status_code=403, detail="You don't have permission to delete this post")
-
+        """
+        
         await session.delete(post)
         await session.commit()
 
