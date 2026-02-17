@@ -6,6 +6,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, relationship
 from datetime import datetime
+
+# Users
 from fastapi_users.db import SQLAlchemyUserDatabase, SQLAlchemyBaseUserTableUUID
 from fastapi import Depends
 
@@ -15,9 +17,10 @@ DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 class Base(DeclarativeBase):
     pass
 
-
+# User
+# Database of posts and users
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    posts = relationship("Post", back_populates="user")
+    posts = relationship(argument="Post", back_populates="user")
 
 
 class Post(Base):
@@ -31,7 +34,8 @@ class Post(Base):
     file_name = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    user = relationship("User", back_populates="posts")
+    # One user can have many posts
+    user = relationship(argument="User", back_populates="posts")
 
 
 engine = create_async_engine(DATABASE_URL)
@@ -47,6 +51,6 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
 
-
+# Database associated with the user
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield SQLAlchemyUserDatabase(session, User)

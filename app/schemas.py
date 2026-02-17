@@ -10,6 +10,8 @@ class PostResponse(BaseModel):
     title: str
     content: str
 
+# dummy schemas for user operations, they come automatically with fastapi users 
+# but is necessary to define them here to use in the endpoints
 class UserRead(schemas.BaseUser[uuid.UUID]):
     pass
 

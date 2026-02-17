@@ -5,18 +5,19 @@ from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin, models
 from fastapi_users.authentication import (
     AuthenticationBackend,
     BearerTransport,
-    JWTStrategy
+    JWTStrategy 
 )
 from fastapi_users.db import SQLAlchemyUserDatabase
 from app.db import User, get_user_db
 
-SECRET = "sakjdhkjad872323"
+SECRET = "abcd123" # string to access the token 
 
-
+# class usermanager from fastapi docs
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
+    # fastapi user functions
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
 
@@ -26,13 +27,14 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     async def on_after_request_verify(self, user: User, token: str, request: Optional[Request] = None):
         print(f"Verification requested for user {user.id}. Verification token: {token}")
 
-
+# load the user database to the user manager
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
     yield UserManager(user_db)
 
-
+# user login endpoint
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
+# json token lifetime ofr the user
 def get_jwt_strategy():
     return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
 
@@ -42,5 +44,6 @@ auth_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy,
 )
 
+# create the fastapi user instance
 fastapi_users = FastAPIUsers[User, uuid.UUID](get_user_manager, [auth_backend])
 current_active_user = fastapi_users.current_user(active=True)
