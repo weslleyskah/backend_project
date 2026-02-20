@@ -11,14 +11,9 @@ Backend project using python fastapi to upload, store and delete images with use
 cd backend_project
 uv init .
 # venv & dependencies 
-# .venv\scripts\python.exe
-uv add fastapi
-uv add python-dotenv
-uv add fastapi-users[sqlalchemy]
-uv add imagekitio
-uv add uvicorn[standard]
-uv add aiosqlite
-uv add streamlit
+# python interpreter: .venv\scripts\python.exe
+# fill api keys on .env
+uv add fastapi python-dotenv "fastapi-users[sqlalchemy]" imagekitio "uvicorn[standard]" aiosqlite streamlit
 # run
 # http://localhost:8000/docs
 # user auth: user1@user.net 123 /auth/register -> authorize

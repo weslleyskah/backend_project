@@ -1,2 +1,2 @@
-*.mkv
+.pyproject.toml
 __pycache__
