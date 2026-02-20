@@ -9,6 +9,9 @@ Backend project using python fastapi to upload, store and delete images with use
 ## Environment Setup
 ```bash
 cd backend_project
+# install uv
+pip install uv
+# add scripts path (.eg C:\Users\user\AppData\Local\Python\pythoncore-3.14-64\Scripts) to user environment path
 uv init .
 # venv & dependencies 
 # python interpreter: .venv\scripts\python.exe
